@@ -10,6 +10,8 @@ const env_1 = require("./config/env");
 require("dotenv/config");
 const client_1 = require("./prisma/client");
 const authRoute_1 = __importDefault(require("./route/authRoute"));
+const todoRoute_1 = __importDefault(require("./route/todoRoute"));
+const projectRoute_1 = __importDefault(require("./route/projectRoute"));
 const errorHandler_1 = require("./middleware/errorHandler");
 const app = (0, express_1.default)();
 const corsOptions = {
@@ -25,6 +27,8 @@ app.get("/", async (_req, res) => {
 });
 const PORT = env_1.ENV.PORT;
 app.use("/api/auth", authRoute_1.default);
+app.use("/api/todos", todoRoute_1.default);
+app.use("/api/projects", projectRoute_1.default);
 app.use(errorHandler_1.errorHandler);
 app.listen(PORT, async () => {
     await client_1.prisma.$connect();

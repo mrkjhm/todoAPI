@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const todoController_1 = require("../controller/todoController");
+const validateRequest_1 = require("../middleware/validateRequest");
+const todoSchemas_1 = require("../schemas/todoSchemas");
+const auth_1 = require("../middleware/auth");
+const router = (0, express_1.Router)();
+router.post("/:projectId", (0, validateRequest_1.validateRequest)(todoSchemas_1.createTodoSchema), auth_1.requireAuth, todoController_1.createTodo);
+router.get("/", auth_1.requireAuth, todoController_1.getAllTodo);
+router.patch("/:id/toggle", auth_1.requireAuth, todoController_1.completedToto);
+router.delete("/:id", auth_1.requireAuth, todoController_1.deleteTodo);
+router.put("/update-todo/:id", auth_1.requireAuth, todoController_1.updateTodo);
+exports.default = router;
