@@ -13,9 +13,20 @@ import { errorHandler } from "./middleware/errorHandler";
 const app: Express = express();
 
 const corsOptions: CorsOptions = {
-  origin: ALLOWED_ORIGINS,
+  origin: (origin, callback) => {
+    // Allow non-browser apps like Postman
+    if (!origin) return callback(null, true);
+
+    if (ALLOWED_ORIGINS.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Not allowed by CORS"), false);
+  },
   credentials: true,
 };
+
+
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
