@@ -14,17 +14,25 @@ const app: Express = express();
 
 const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
-    // Allow non-browser apps like Postman
+    // allow mobile apps / postman / server-side requests
     if (!origin) return callback(null, true);
 
+    // allow exact domains from .env
     if (ALLOWED_ORIGINS.includes(origin)) {
       return callback(null, true);
     }
 
-    return callback(new Error("Not allowed by CORS"), false);
+    // allow all Vercel deployments (prod + preview)
+    if (origin.endsWith(".vercel.app")) {
+      return callback(null, true);
+    }
+
+    // else block
+    callback(new Error("Not allowed by CORS"), false);
   },
   credentials: true,
 };
+
 
 
 app.use(cors(corsOptions));
